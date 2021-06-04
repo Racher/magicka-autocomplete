@@ -1,0 +1,22 @@
+VORTEX
+ice 4000/8000
+steam 4000
+pleague 3000+
+lightning 2000/6000
+arcane 2000
+
+FOCUS COOLDOWNS (fast staff)
+1: 1500
+2: 3500
+3: 5000
+4: 6000
+Space: 3000 after all
+
+CAST TIMES
+Arm up: 450 Tele, Haste, Lightning, Quake2, Owl
+Arms out: 600 AOE, Dispel
+Arms fwd: 900 Push
+Smash: 750
+Imbue: 450
+Qswing: 450
+Sswing: 800
