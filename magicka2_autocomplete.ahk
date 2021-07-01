@@ -18,10 +18,10 @@ global SPELLBOOK:="
 (
 aaaaa	aqaaaaa	ass,asf	awda	adaaaaa	aeqqfaaa	afafa	arara
 qaqqqqq	qqqqq,qqdrrrr,qqrrqqrr	qsqsqsqq	qwwww	qdqqqq	qeqq	qfasa	qrdsr,qrqrqrqr,qrrqrrqq
-sadfqaas	sqfqsqss	sssss,ssdss	swsssss	sde,sdsd	se	sfsfs	srsrs
+sadfqaas	sqfqfss	sssss,ssdss,sseesse,ssadssa	swsssss	sde,sdsd	se,sesss,seqqqqsff	sfsfs	srsrs
 wa	wqwww	wswwwww	wwwww	wdwwww	weewae	wfwwww	wrwwww
-daddddd	dqqqq	dssssqq	dwwww	ddddd	dedqrqr	dffss	drsss
 eaqrqaaa	eqqqq,eqqqqsssr,eqqqqff,eqqqqrr	esssrq	ewwww	eddrqrq	ee	efffd	errdrq
+daddddd	dqqqq	dsqfqsf,dsfqqsf,dssss,dsrsrrr	dwwww	ddddd	deeqrqr	drrrr	dffff
 faqqaaaa	fqasa	fsfss	fwwww	fdssf	fessf	fffff,ffdff,ffsaa	frfffff
 rasqqsar	rqdsr,rqrqrrqq,rqqrqqrr	rsrss	rwwww	rdssr	ressr	rfrrrrr	rrrrr,rrdqqrr,rrqqrrqq
 )"
@@ -61,7 +61,6 @@ d::MyPush("d")
 e::MyPush("e")
 f::MyPush("f")
 r::MyPush("r")
-;Not sure how to do it with shorter syntax. Ex: *~RButton:: does not delay, allowing early firing.
 +LButton::QueuedHold("+","LButton")
 ^LButton::QueuedHold("^","LButton")
 !LButton::QueuedHold("!","LButton")
@@ -85,7 +84,6 @@ Space::QueuedHold("","Space")
 +Space::QueuedHold("+","Space")
 ^Space::QueuedHold("^","Space")
 !Space::QueuedHold("!","Space")
-;2 is the default focus slot for the prisms which are finishers.
 2::QueuedHold("","2")
 +2::QueuedHold("+","2")
 ^2::QueuedHold("^","2")

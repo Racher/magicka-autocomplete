@@ -20,3 +20,19 @@ Smash: 750
 Imbue: 450
 Qswing: 450
 Sswing: 800
+
+HASTE BUG:
+any self shield: qeeee MButton
+place death trap: efqaaa RButton
+apply haste asf Space
+die quickly
+revive with perma haste
+can self cast instants: self cast,teleport,revive
+can use beam, aoe?
+can apply status BUT MUST CANCEL before casting else: shield,2ndhaste
+
+SACRIFICE BUG:
+cast SACRIFICE
+self dq  - apply wet
+a - self shock
+can self cast instants: self cast,teleport,revive
