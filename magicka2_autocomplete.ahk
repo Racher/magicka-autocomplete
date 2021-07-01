@@ -19,12 +19,13 @@ global SPELLBOOK:="
 aaaaa	aqaaaaa	ass,asf	awda	adaaaaa	aeqqfaaa	afafa	arara
 qaqqqqq	qqqqq,qqdrrrr,qqrrqqrr	qsqsqsqq	qwwww	qdqqqq	qeqq	qfasa	qrdsr,qrqrqrqr,qrrqrrqq
 sadfqaas	sqfqfss	sssss,ssdss,sseesse,ssadssa	swsssss	sde,sdsd	se,sesss,seqqqqsff	sfsfs	srsrs
-wa	wqwww	wswwwww	wwwww	wdwwww	weewae	wfwwww	wrwwww
-eaqrqaaa	eqqqq,eqqqqsssr,eqqqqff,eqqqqrr	esssrq	ewwww	eddrqrq	ee	efffd	errdrq
+wa	wqwww	wswwwww	wwwww	wdwwww	wewww	wfwwww	wrwwww
+eaqrqaaa	eqqqq,eqqqqsssr,eqqqqff,eqqqqrr	esssrq	ewewae	eddrqrq	ee	efffd	errdrq
 daddddd	dqqqq	dsqfqsf,dsfqqsf,dssss,dsrsrrr	dwwww	ddddd	deeqrqr	drrrr	dffff
-faqqaaaa	fqasa	fsfss	fwwww	fdssf	fessf	fffff,ffdff,ffsaa	frfffff
-rasqqsar	rqdsr,rqrqrrqq,rqqrqqrr	rsrss	rwwww	rdssr	ressr	rfrrrrr	rrrrr,rrdqqrr,rrqqrrqq
+faqqaaaa	fqasa	fsfss	fwwww	fdssf	fesff	fffff,ffdff,ffsaa	frfffff
+rasqqsar	rqdsr,rqrqrrqq,rqqrqqrr	rsrss	rwwww	rdssr	resrr	rfrrrrr	rrrrr,rrdqqrr,rrqqrrqq
 )"
+alive := true
 global CACHE:="" ;This is what the script thinks your current element combination is. Use RButton to reset when it de-syncs. (Ex: death, cutscene while spelling)
 SetKeyDelay, 0, 24 ;24 seems to work well for me. Try increasing the delay if your game seems to drop inputs or to make it more human-like.
 SoundBeep ;Reload(F5) notification.
@@ -50,9 +51,56 @@ MyPush(k) { ;autocomplete logic
 	CACHE:=CACHE ks
 	Send % ks
 }
+StartAliveChecker() {
+	global aliveRef
+	MouseGetPos, x, y
+	PixelGetColor, c, x, y
+	aliveRef := {x:x,y:y,c:c}
+	SetTimer, CheckAlive, 15
+	SoundBeep
+}
+StopAliveChecker() {
+	global alive
+	SetTimer, CheckAlive, Off
+	Sleep, 10
+	alive := true
+	SoundBeep
+}
+CheckAlive() {
+	if (!WinActive("ahk_exe Magicka2.exe"))
+		return
+	global aliveRef
+	global alive
+	global CACHE
+	x := aliveRef.x
+	y := aliveRef.y
+	PixelGetColor, c, x, y
+	if (c == aliveRef.c) {
+		if (!alive) {
+			SoundBeep
+			alive := true
+			CACHE := ""
+			Sleep, 900
+			Send, ddeqq
+			te := A_TickCount + 400
+			While (te>A_TickCount)
+				Send {XButton1}
+			Send, wa
+			te := A_TickCount + 400
+			While (te>A_TickCount)
+				Send {Space}
+		}
+	} else if (alive) {
+		SoundBeep
+		alive := false
+	}
+}
 #If WinActive("ahk_exe Magicka2.exe")
 F4::Suspend,Toggle
 F5::Reload
+F1::StartAliveChecker()
+F2::StopAliveChecker()
+#If WinActive("ahk_exe Magicka2.exe") and alive
 a::MyPush("a")
 q::MyPush("q")
 s::MyPush("s")
