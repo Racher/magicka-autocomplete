@@ -19,18 +19,33 @@ global SPELLBOOK:="
 aaaaa	aqaaaaa	ass,asf	awda	adaaaaa	aeqqfaaa	afafa	arara
 qaqqqqq	qqqqq,qqdrrrr,qqrrqqrr	qsqsqsqq	qwwww	qdqqqq	qeqq	qfasa	qrdsr,qrqrqrqr,qrrqrrqq
 sadfqaas	sqfqfss	sssss,ssdss,sseesse,ssadssa	swsssss	sde,sdsd	se,sesss,seqqqqsff	sfsfs	srsrs
-wa	wqwww	wswwwww	wwwww	wdwwww	wewww	wfwwww	wrwwww
+wa	wqwww	wswwwww	wwwww	wdwwww	wewww	wfwwww	wrrrr
 eaqrqaaa	eqqqq,eqqqqsssr,eqqqqff,eqqqqrr	esssrq	ewewae	eddrqrq	ee	efffd	errdrq
 daddddd	dqqqq	dsqfqsf,dsfqqsf,dssss,dsrsrrr	dwwww	ddddd	deeqrqr	drrrr	dffff
 faqqaaaa	fqasa	fsfss	fwwww	fdssf	fesff	fffff,ffdff,ffsaa	frfffff
 rasqqsar	rqdsr,rqrqrrqq,rqqrqqrr	rsrss	rwwww	rdssr	resrr	rfrrrrr	rrrrr,rrdqqrr,rrqqrrqq
 )"
-alive := true
 global CACHE:="" ;This is what the script thinks your current element combination is. Use RButton to reset when it de-syncs. (Ex: death, cutscene while spelling)
-SetKeyDelay, 0, 24 ;24 seems to work well for me. Try increasing the delay if your game seems to drop inputs or to make it more human-like.
+SetKeyDelay, 0, 24
 SoundBeep ;Reload(F5) notification.
+alive := true
+disrupt := 0
 QueuedHold(m,k) ;Triggers have to 1) Clear the CACHE. 2) Be delayed until the current spelling is finished.
 {
+	global disrupt
+	if (CACHE="sde" and k="Space") {
+		CACHE:=""
+		Send {Space}
+		disrupt := A_TickCount + 5500
+		Return
+	}
+	if ((CACHE="dqqqq" or CACHE="qdqqq") and k="XButton1") {
+		CACHE:=""
+		Send {XButton1}
+		Sleep, 375
+		Send, {LButton}
+		Return
+	}
 	CACHE:=""
 	Send % m "{" k " down}"
 	KeyWait, %k%
@@ -59,19 +74,13 @@ StartAliveChecker() {
 	SetTimer, CheckAlive, 15
 	SoundBeep
 }
-StopAliveChecker() {
-	global alive
-	SetTimer, CheckAlive, Off
-	Sleep, 10
-	alive := true
-	SoundBeep
-}
 CheckAlive() {
-	if (!WinActive("ahk_exe Magicka2.exe"))
-		return
+	global disrupt
 	global aliveRef
 	global alive
 	global CACHE
+	if (!WinActive("ahk_exe Magicka2.exe") || A_TickCount < disrupt)
+		return
 	x := aliveRef.x
 	y := aliveRef.y
 	PixelGetColor, c, x, y
@@ -80,15 +89,10 @@ CheckAlive() {
 			SoundBeep
 			alive := true
 			CACHE := ""
-			Sleep, 900
-			Send, ddeqq
-			te := A_TickCount + 400
-			While (te>A_TickCount)
-				Send {XButton1}
-			Send, wa
-			te := A_TickCount + 400
-			While (te>A_TickCount)
-				Send {Space}
+			SetKeyDelay, 900, 24
+			Send, {Space}
+			SetKeyDelay, 0, 24
+			SoundBeep
 		}
 	} else if (alive) {
 		SoundBeep
@@ -96,11 +100,9 @@ CheckAlive() {
 	}
 }
 #If WinActive("ahk_exe Magicka2.exe")
+F1::StartAliveChecker()
 F4::Suspend,Toggle
 F5::Reload
-F1::StartAliveChecker()
-F2::StopAliveChecker()
-#If WinActive("ahk_exe Magicka2.exe") and alive
 a::MyPush("a")
 q::MyPush("q")
 s::MyPush("s")
